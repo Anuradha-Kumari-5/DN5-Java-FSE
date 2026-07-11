@@ -1,0 +1,1 @@
+package com.cognizant.springlearn; public class Country{private String code,name; public Country(){System.out.println("Inside Country Constructor.");} public String getCode(){return code;} public void setCode(String c){code=c;} public String getName(){return name;} public void setName(String n){name=n;} public String toString(){return "Country [code="+code+", name="+name+"]";}}
