@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        This is old-style, XML-based Spring bean configuration, as opposed
+        to annotation-based (@Component, @Bean, etc.) configuration.
+
+        This single bean definition tells Spring:
+          - create one instance of com.cognizant.springlearn.model.Country
+          - call it "india" in the application context
+          - after construction, call setCode("IN") and setName("India")
+            on it (that's what the two <property> tags do)
+
+        CountryController looks this bean up by name ("india") at request
+        time and returns it.
+    -->
+    <bean id="india" class="com.cognizant.springlearn.model.Country">
+        <property name="code" value="IN"/>
+        <property name="name" value="India"/>
+    </bean>
+
+</beans>
