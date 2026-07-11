@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!--
+        Unlike beans.xml (which defines one single "india" bean),
+        this file defines a *list* of Country beans, exposed as a single
+        bean named "countryList" of type java.util.List<Country>.
+
+        <util:list> is a Spring XML helper that lets you declare a
+        collection as a bean directly, instead of writing a factory
+        method in Java. CountryService injects this list and searches
+        it at request time.
+    -->
+    <util:list id="countryList" list-class="java.util.ArrayList">
+        <bean class="com.cognizant.springlearn.model.Country">
+            <property name="code" value="IN"/>
+            <property name="name" value="India"/>
+        </bean>
+        <bean class="com.cognizant.springlearn.model.Country">
+            <property name="code" value="US"/>
+            <property name="name" value="United States"/>
+        </bean>
+        <bean class="com.cognizant.springlearn.model.Country">
+            <property name="code" value="GB"/>
+            <property name="name" value="United Kingdom"/>
+        </bean>
+        <bean class="com.cognizant.springlearn.model.Country">
+            <property name="code" value="AU"/>
+            <property name="name" value="Australia"/>
+        </bean>
+        <bean class="com.cognizant.springlearn.model.Country">
+            <property name="code" value="JP"/>
+            <property name="name" value="Japan"/>
+        </bean>
+    </util:list>
+
+</beans>
