@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        This file is the whole point of the exercise: it tells Spring's
+        IoC (Inversion of Control) container which objects to create and
+        how to wire them together, WITHOUT any of that logic living
+        inside the Java classes themselves.
+
+        "Inversion of Control" means: instead of BookService creating
+        its own BookRepository (e.g. "new BookRepository()" inside
+        BookService's code), Spring creates both objects and hands
+        BookService a ready-made BookRepository. Control over object
+        creation is "inverted" -- moved from your code to the container.
+    -->
+
+    <!-- Bean 1: BookRepository, with no dependencies of its own -->
+    <bean id="bookRepository" class="com.library.repository.BookRepository"/>
+
+    <!-- Bean 2: BookService, depends on BookRepository.
+         <property name="bookRepository" ref="bookRepository"/> tells
+         Spring: "call setBookRepository(...) on this BookService
+         instance, passing in the bean with id 'bookRepository' defined
+         above." This is called setter (property) injection. -->
+    <bean id="bookService" class="com.library.service.BookService">
+        <property name="bookRepository" ref="bookRepository"/>
+    </bean>
+
+</beans>
