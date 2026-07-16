@@ -1,0 +1,57 @@
+<div class="enroll-container">
+  <h2>Student Enrollment (Reactive Form)</h2>
+
+  <form [formGroup]="enrollForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="studentName">Student Name</label>
+      <input id="studentName" type="text" formControlName="studentName" />
+      <div class="error" *ngIf="enrollForm.get('studentName')?.invalid && enrollForm.get('studentName')?.touched">
+        <span *ngIf="enrollForm.get('studentName')?.errors?.['required']">Name is required.</span>
+        <span *ngIf="enrollForm.get('studentName')?.errors?.['minlength']">Name must be at least 3 characters.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="studentEmail">Student Email</label>
+      <input id="studentEmail" type="email" formControlName="studentEmail" />
+      <div class="error" *ngIf="enrollForm.get('studentEmail')?.invalid && enrollForm.get('studentEmail')?.touched">
+        <span *ngIf="enrollForm.get('studentEmail')?.errors?.['required']">Email is required.</span>
+        <span *ngIf="enrollForm.get('studentEmail')?.errors?.['email']">Enter a valid email address.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="courseId">Course</label>
+      <select id="courseId" formControlName="courseId">
+        <option [ngValue]="null" disabled>Select a course</option>
+        <option [ngValue]="101">101 - Data Structures</option>
+        <option [ngValue]="102">102 - DBMS</option>
+        <option [ngValue]="103">103 - Web Development</option>
+      </select>
+      <div class="error" *ngIf="enrollForm.get('courseId')?.invalid && enrollForm.get('courseId')?.touched">
+        Please select a course.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="preferredSemester">Preferred Semester</label>
+      <select id="preferredSemester" formControlName="preferredSemester">
+        <option value="Odd">Odd</option>
+        <option value="Even">Even</option>
+      </select>
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" formControlName="agreeToTerms" />
+        I agree to the terms and conditions
+      </label>
+      <div class="error" *ngIf="enrollForm.get('agreeToTerms')?.invalid && enrollForm.get('agreeToTerms')?.touched">
+        You must accept the terms to continue.
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="enrollForm.invalid">Submit</button>
+  </form>
+</div>
