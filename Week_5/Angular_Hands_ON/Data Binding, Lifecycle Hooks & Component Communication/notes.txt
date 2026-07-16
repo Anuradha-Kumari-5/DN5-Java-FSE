@@ -1,0 +1,64 @@
+Angular Workspace File Notes — student-course-portal
+======================================================
+
+angular.json
+  The workspace configuration file. Tells the Angular CLI how to build,
+  serve, test, and lint the project — output paths, file replacements,
+  asset lists, style/script bundling, and size budgets all live here.
+
+tsconfig.json
+  The root TypeScript configuration shared across the whole workspace
+  (compiler options like strict mode, target ES version, module
+  resolution). Other tsconfig files extend this one.
+
+tsconfig.app.json
+  TypeScript config specific to compiling the browser application. It
+  extends tsconfig.json and narrows the "files"/"include" list to just
+  the app source (excludes spec/test files).
+
+package.json
+  Lists the project's npm dependencies (Angular packages, RxJS, etc.),
+  devDependencies (CLI, TypeScript, testing tools), and the npm scripts
+  (start, build, test) used to run the project.
+
+src/main.ts
+  The application's entry point. It bootstraps the app — in standalone
+  mode it calls bootstrapApplication(AppComponent, appConfig); in
+  NgModule mode it calls platformBrowserDynamic().bootstrapModule(AppModule).
+
+src/app/app.config.ts  (standalone mode — replaces app.module.ts)
+  Defines the root ApplicationConfig: the list of providers (router,
+  change detection strategy, HTTP client, etc.) that main.ts passes into
+  bootstrapApplication. This project uses the standalone API (Angular 19
+  default), so there is no app.module.ts.
+
+src/app/app.component.ts
+  The root component of the application. Its selector (app-root) is the
+  tag used in index.html to mount the whole Angular app; its template
+  holds the header and <router-outlet> that renders routed pages.
+
+src/index.html
+  The single HTML page the browser actually loads. It contains the
+  <app-root></app-root> tag where Angular bootstraps the app, and is the
+  shell into which the compiled JS/CSS bundles are injected at build time.
+
+Notes on `ng build` output (dist/student-course-portal/browser/)
+  - main-<hash>.js       → contains the compiled application code
+                            (components, routes, app logic)
+  - polyfills-<hash>.js  → browser compatibility polyfills
+  - styles-<hash>.css    → compiled global styles
+  - index.html           → the shell page, updated to reference the
+                            hashed bundle filenames
+  - favicon.ico          → static asset copied as-is
+
+Notes on angular.json budgets (architect > build > configurations > production)
+  "initial" budget (maximumWarning: 500kB, maximumError: 1MB)
+    Controls the total size of the initial JS bundle downloaded when the
+    app first loads. Angular CLI prints a build WARNING if this bundle
+    exceeds 500kB, and fails the build with an ERROR if it exceeds 1MB.
+    This keeps first-load performance in check.
+
+  "anyComponentStyle" budget (maximumWarning: 4kB, maximumError: 8kB)
+    Controls the size of any single component's compiled CSS file. Warns
+    at 4kB, errors at 8kB — prevents one component's styles from bloating
+    the bundle unnoticed.
