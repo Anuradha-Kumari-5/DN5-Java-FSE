@@ -1,0 +1,30 @@
+.App {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+  text-align: left;
+}
+
+.posts h1 {
+  text-align: center;
+  color: #1976d2;
+}
+
+.post {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.post h2 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  text-transform: capitalize;
+}
+
+.post p {
+  margin: 0;
+  color: #555;
+}
