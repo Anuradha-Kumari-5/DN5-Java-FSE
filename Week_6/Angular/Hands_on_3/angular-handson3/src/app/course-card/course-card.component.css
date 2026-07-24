@@ -1,0 +1,4 @@
+.card{padding:16px;margin:10px;border:1px solid #ccc;transition:.3s}
+.card--enrolled{background:#e8fff0}
+.card--full{box-shadow:0 0 6px #888}
+.expanded{min-height:220px}

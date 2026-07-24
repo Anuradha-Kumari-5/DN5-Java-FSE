@@ -1,0 +1,20 @@
+<div class="card"
+ [ngClass]="cardClasses"
+ [ngStyle]="{'border-left':'6px solid '+borderColor}">
+
+<h3>{{course.title}}</h3>
+<p>{{course.credits | creditLabel}}</p>
+
+<div [ngSwitch]="course.gradeStatus">
+<span *ngSwitchCase="'passed'" style="color:green">Passed</span>
+<span *ngSwitchCase="'failed'" style="color:red">Failed</span>
+<span *ngSwitchDefault style="color:grey">Pending</span>
+</div>
+
+<button (click)="toggleDetails()">Show Details</button>
+
+<div *ngIf="isExpanded">
+<p>Extra course details...</p>
+</div>
+
+</div>
