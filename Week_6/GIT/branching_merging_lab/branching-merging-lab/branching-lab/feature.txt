@@ -1,0 +1,2 @@
+This file was added while working on GitNewBranch.
+It demonstrates a change made in a feature branch before merging.
