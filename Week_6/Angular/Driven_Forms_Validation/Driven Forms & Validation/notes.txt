@@ -1,0 +1,150 @@
+STUDENT COURSE PORTAL - PROJECT FILE NOTES
+Hands-On 1: Environment Setup, Project Structure & First Component
+============================================================
+
+1. angular.json
+   Workspace-level configuration file for the Angular CLI — defines
+   projects, build targets (build/serve/test), file replacements,
+   asset paths, style/script bundling options, and the performance
+   budgets used during production builds.
+
+2. tsconfig.json
+   The base/root TypeScript configuration shared across the whole
+   workspace — sets global compiler options (target ECMAScript
+   version, strict type-checking flags, module resolution) that
+   tsconfig.app.json and tsconfig.spec.json both extend.
+
+3. tsconfig.app.json
+   TypeScript configuration specific to compiling the application's
+   source code for the browser build — extends tsconfig.json and
+   narrows the "files"/"include" scope to exclude spec (test) files.
+
+4. package.json
+   Standard npm manifest — lists the project's dependencies
+   (Angular packages, RxJS, etc.), devDependencies (CLI, TypeScript,
+   testing tools), and the npm scripts (ng serve/build/test) used to
+   run common CLI commands.
+
+5. src/main.ts
+   The application's entry point. It calls bootstrapApplication()
+   with the root standalone component (App) and the appConfig
+   providers, which is what actually starts the Angular app in the
+   browser (in older/NgModule-based projects this file instead calls
+   platformBrowserDynamic().bootstrapModule(AppModule)).
+
+6. src/app/app.config.ts (standalone mode — replaces app.module.ts)
+   Defines the ApplicationConfig object that supplies the app's
+   root-level providers (e.g. provideRouter(routes),
+   provideBrowserGlobalErrorListeners) to main.ts at bootstrap time.
+   This is the standalone-API equivalent of the old @NgModule
+   metadata (imports/providers/bootstrap) in app.module.ts.
+
+7. src/app/app.ts (generated as app.component.ts in earlier CLI
+   versions; Angular's newest CLI schematics drop the ".component"
+   suffix from the class file name)
+   The root component class. Holds the @Component decorator
+   (selector: app-root, templateUrl, styleUrl) and any root-level
+   state — here just a "title" signal used by the default template.
+
+8. src/index.html
+   The single static HTML page the whole app is injected into. It
+   contains the <app-root></app-root> tag that Angular replaces with
+   the rendered root component, plus the <base href="/"> tag the
+   router needs to resolve relative routes correctly.
+
+------------------------------------------------------------
+NOTE ON PROJECT VERSION
+This workspace was generated with Angular CLI 21 (Node 22), which is
+newer than the "Angular 20" referenced in the exercise book, but it
+uses the same standalone-API structure described in the hints:
+app.config.ts instead of app.module.ts, and no NgModule declarations
+anywhere in the project. The only cosmetic difference from the
+exercise text is file naming — the CLI now generates app.ts /
+app.html / app.css instead of app.component.ts / .html / .css (and
+the same pattern for every generated component: header.ts instead of
+header.component.ts, etc.). Behaviourally they are identical.
+------------------------------------------------------------
+
+TASK 1, STEP 3 — ng serve
+`ng serve` compiled without errors and served the app at
+http://localhost:4200. The default Angular welcome page loaded
+correctly before it was replaced with the custom header/home content
+in Task 2.
+
+TASK 1, STEP 4 — ng build
+`ng build` produced a dist/student-course-portal/ folder containing:
+  - browser/index.html            the served HTML shell
+  - browser/main-<hash>.js        the compiled application code
+                                   (all TypeScript/Angular code,
+                                   bundled and minified — this is the
+                                   file that actually contains the
+                                   compiled app logic)
+  - browser/styles-<hash>.css     the compiled global stylesheet
+  - browser/favicon.ico           static asset
+  - 3rdpartylicenses.txt          third-party license notices
+  - prerendered-routes.json       metadata from build-time route
+                                   prerendering (SSR/SSG support,
+                                   enabled by default in new
+                                   Angular CLI projects)
+
+TASK 1, STEP 5 — angular.json budgets
+Located under architect > build > configurations > production >
+budgets:
+  - type "initial": maximumWarning 500kB, maximumError 1MB
+      Controls the size of the app's initial JS bundle (what loads
+      before the app becomes interactive). CLI logs a warning if the
+      bundle exceeds 500kB, and FAILS the production build if it
+      exceeds 1MB.
+  - type "anyComponentStyle": maximumWarning 4kB, maximumError 8kB
+      Same idea but applied per-component stylesheet — warns if any
+      single component's CSS file exceeds 4kB, fails the build past
+      8kB. Keeps individual components from shipping bloated styles.
+
+============================================================
+Hands-On 4: Template-Driven Forms & Validation
+============================================================
+
+- FormsModule (and CommonModule for *ngIf) added to
+  EnrollmentForm's standalone `imports` array — this is the
+  standalone-API equivalent of adding FormsModule to an
+  @NgModule's imports.
+- Route registered in src/app/app.routes.ts (this project has no
+  app-routing.module.ts because it uses the standalone Router API —
+  app.routes.ts is where all routes live, including /enroll).
+- enrollment-form.html builds the form with #enrollForm="ngForm",
+  (ngSubmit)="onSubmit(enrollForm)", and [(ngModel)] + name on every
+  control: studentName (text), studentEmail (email), courseId
+  (number), preferredSemester (select: Odd/Even), agreeToTerms
+  (checkbox).
+- Validators added per spec: required + minlength="3" on
+  studentName; required + email on studentEmail; required on
+  courseId, preferredSemester, agreeToTerms.
+- Each control exposes a local template reference variable
+  (#nameCtrl="ngModel", #emailCtrl="ngModel", etc.) so error spans
+  can check `ctrl.touched && ctrl.errors?.['required']` /
+  `['minlength']` / `['email']` right next to the field.
+- onSubmit(form: NgForm) logs form.value and form.valid to the
+  console, and only flips `submitted = true` (showing the success
+  banner) when the form is valid.
+- Submit button is [disabled]="enrollForm.invalid"; a Reset button
+  calls enrollForm.resetForm() via onReset(), which also clears the
+  submitted flag.
+- CSS uses Angular's auto-applied state classes exactly as hinted:
+  .ng-invalid.ng-touched { border-color: red } and
+  .ng-valid.ng-touched { border-color: green } — no extra selector
+  scoping needed since these classes land directly on the <input>/
+  <select> elements in this component's own template.
+
+TASK 1, STEP 42 — shape of form.value on submit
+Logging form.value from NgForm gives a plain object keyed by each
+control's `name` attribute, e.g.:
+  {
+    studentName: "Anuradha",
+    studentEmail: "anu@example.com",
+    courseId: 101,
+    preferredSemester: "Odd",
+    agreeToTerms: true
+  }
+Only controls with a `name` attribute appear here — this is why the
+hint stresses `name` is mandatory for every control in a
+template-driven form.
